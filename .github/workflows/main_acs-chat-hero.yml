@@ -11,7 +11,7 @@ on:
 
 jobs:
   build:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v4
@@ -28,7 +28,7 @@ jobs:
           npm run build --if-present
           npm run package --if-present
 
-          7z a -tzip -r "group-chat.zip" ./Chat/dist/*
+          7z a -tzip -r "release.zip" ./Chat/dist/*
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v3
