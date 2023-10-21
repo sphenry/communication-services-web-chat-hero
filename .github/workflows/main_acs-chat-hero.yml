@@ -19,19 +19,22 @@ jobs:
       - name: Set up Node.js version
         uses: actions/setup-node@v1
         with:
-          node-version: '~14'
+          node-version: '~16'
 
       - name: npm install, build, and test
         run: |
           npm install
+          npm run setup --if-present
           npm run build --if-present
-          npm run test --if-present
+          npm run package --if-present
+
+          7z a -tzip -r "group-chat.zip" ./Chat/dist/*
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v3
         with:
           name: node-app
-          path: .
+          path: release.zip
 
   deploy:
     runs-on: ubuntu-latest
@@ -45,6 +48,9 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: node-app
+
+      - name: Unzip artifact for deployment
+        run: unzip release.zip
 
       - name: 'Deploy to Azure Web App'
         uses: azure/webapps-deploy@v2
